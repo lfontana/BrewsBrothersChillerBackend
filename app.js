@@ -10,7 +10,8 @@ require('dotenv').load();
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-var batches = require('./routes/batches')
+var batches = require('./routes/batches');
+var brewerydb = require('./routes/brewerydb')
 
 var app = express();
 
@@ -30,7 +31,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
-app.use('/dashboard', batches)
+app.use('/dashboard', batches);
+app.use('/styles', brewerydb);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

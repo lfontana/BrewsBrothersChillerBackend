@@ -1,2 +1,2 @@
-# ReactNativeController-Pi-Backend
-Node server for the BrewsBrothers project. 
+
+Node server for the BrewsBrothers project.

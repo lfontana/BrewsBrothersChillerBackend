@@ -8,4 +8,8 @@ node_js:
   - "0.8"
   - "0.6"
   - "iojs"
-  
+
+  deploy:
+  provider: heroku
+  api_key:
+    secure: "YOUR ENCRYPTED API KEY"

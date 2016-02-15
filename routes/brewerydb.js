@@ -1,4 +1,5 @@
-var express = require('express')
+var express = require('express');
+var unirest = require('unirest');
 var router = express.Router();
 
 require('dotenv').load();
@@ -6,11 +7,15 @@ require('dotenv').load();
 
 /* API Call */
 router.get('/', function(req, res, next) {
-  getRequest('fermentables')
-  .then(function(data){
+  console.log('calling brewerydb');
+  requestLoop('styles')
+  .then(function(data) {
+    console.log('data got');
     res.send(data)
+  }).catch(function(err){
+    res.send(err)
   })
-})
+});
 
 
 

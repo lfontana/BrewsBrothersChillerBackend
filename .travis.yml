@@ -1,15 +1,12 @@
 language: node_js
 node_js:
-  - "4.1"
-  - "4.0"
-  - "0.12"
-  - "0.11"
-  - "0.10"
-  - "0.8"
-  - "0.6"
-  - "iojs"
-
-  deploy:
+- '4.2'
+- '4.1'
+- iojs
+scripts:
+  test: mocha
+deploy:
+  app:
   provider: heroku
   api_key:
-    secure: "YOUR ENCRYPTED API KEY"
+    secure: 166f0b6348fdccde864dc9aecb3d50bb

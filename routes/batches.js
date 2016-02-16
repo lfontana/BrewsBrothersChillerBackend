@@ -15,7 +15,7 @@ router.get('/', function(req, res, next){
 router.post('/', function(req, res){
   Batches().insert({
     user_id: req.body.user_id,
-    beer_id: req.body.style,
+    beer_id: req.body.styleNumber,
     name: req.body.name
   });
 });

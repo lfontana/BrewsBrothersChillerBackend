@@ -1,12 +1,20 @@
 language: node_js
 node_js:
-- '4.2'
-- '4.1'
-- iojs
+  - "4"
+env:
+  - CXX=g++-4.8
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.8
+
 scripts:
   test: mocha
+  
 deploy:
   app:
   provider: heroku
   api_key:
-    secure: 166f0b6348fdccde864dc9aecb3d50bb
+    secure: 1166f0b6348fdccde864dc9aecb3d50bb

@@ -11,10 +11,10 @@ function Batches(){
 
 router.get('/', function(req, res, next){
   console.log("working");
-  // res.send(sampleData);
-  Batches().select().then(function(data){
-    res.send(data)
-  });
+  res.send(sampleData);
+  // Batches().select().then(function(data){
+  //   res.send(data)
+  // });
 })
 
 router.post('/', function(req, res){

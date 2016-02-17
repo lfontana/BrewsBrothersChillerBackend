@@ -2,13 +2,14 @@ language: node_js
 node_js:
   - "4.1"
 
-# scripts:
-#   test: mocha
-#
-# env:
-#   global:
-#     secure:
-#
+services:
+  - mongodb
+
+scripts: {
+  "start": "node app.js",
+  "test": "mocha"
+}
+
 # deploy:
 #   app:
 #   provider: heroku

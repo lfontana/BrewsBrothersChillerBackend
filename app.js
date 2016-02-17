@@ -14,7 +14,7 @@ require('dotenv').load();
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var batches = require('./routes/batches');
-var brewerydb = require('./routes/brewerydb')
+var brewerydb = require('./routes/brewerydb');
 var auth = require('./routes/auth');
 
 var session = require('express-session');
@@ -38,25 +38,25 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //Passport fucking bullshit
 
-app.use(session({
-  secret:process.env.COOKIE_SECRET,
-  resave:true,
-  saveUninitialized:true
-}));
-
-app.use(auth.passport.initialize());
-app.use(auth.passport.session());
-
-auth.passport.serializeUser(function(user, done) {
-  console.log('serializing user');
-  done(null, user);
-});
-
-auth.passport.deserializeUser(function(user, done) {
-  console.log('deserializing user');
-  console.log(user);
-  done(null, user);
-});
+// app.use(session({
+//   secret:process.env.COOKIE_SECRET,
+//   resave:true,
+//   saveUninitialized:true
+// }));
+//
+// app.use(auth.passport.initialize());
+// app.use(auth.passport.session());
+//
+// auth.passport.serializeUser(function(user, done) {
+//   console.log('serializing user');
+//   done(null, user);
+// });
+//
+// auth.passport.deserializeUser(function(user, done) {
+//   console.log('deserializing user');
+//   console.log(user);
+//   done(null, user);
+// });
 
 app.use('/', routes);
 app.use('/users', users);

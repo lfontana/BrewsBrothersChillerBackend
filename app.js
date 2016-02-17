@@ -31,7 +31,6 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 
 app.use(cors());
-console.log("testing if kyle is the coolest!");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());

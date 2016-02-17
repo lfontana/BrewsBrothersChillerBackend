@@ -11,16 +11,18 @@ function Batches(){
 
 router.get('/', function(req, res, next){
   Batches().select().then(function(data){
-    console.log("data ", data);
     res.send(data);
   });
 })
 
-router.post('/', function(req, res){
+router.post('/', function(req, res, next){
+  console.log("req body", req.body);
   Batches().insert({
     user_id: req.body.user_id,
     beer_id: req.body.styleNumber,
     name: req.body.name
+  }, 'id').then(function(data){
+    res.end();
   });
 });
 

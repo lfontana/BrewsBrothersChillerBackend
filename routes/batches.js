@@ -12,8 +12,8 @@ function Batches(){
 router.get('/', function(req, res, next){
   Batches().select().then(function(data){
     console.log("data ", data);
+    res.send(data);
   });
-  res.send(sampleData);
 })
 
 router.post('/', function(req, res){

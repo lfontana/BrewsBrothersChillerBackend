@@ -12,9 +12,9 @@ addons:
 
 scripts:
   test: mocha
-  
+
 deploy:
   app:
   provider: heroku
   api_key:
-    secure: 1166f0b6348fdccde864dc9aecb3d50bb
+    secure: 166f0b6348fdccde864dc9aecb3d50bb

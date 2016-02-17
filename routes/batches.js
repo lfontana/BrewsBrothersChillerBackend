@@ -10,10 +10,10 @@ function Batches(){
 /* GET batches for dashboard */
 
 router.get('/', function(req, res, next){
-  // Batches().select().then(function(data){
-  //   console.log("data ", data);
-  //   res.send(data);
-  // });
+  Batches().select().then(function(data){
+    console.log("data ", data);
+    res.send(data);
+  });
   res.send(sampleData);
 })
 

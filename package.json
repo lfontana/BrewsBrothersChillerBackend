@@ -2,6 +2,9 @@
   "name": "bb-server",
   "version": "0.0.0",
   "private": true,
+  "engines": {
+    "node": "4.x"
+  },
   "scripts": {
     "start": "node app.js"
   },

@@ -6,10 +6,14 @@ function Batches(){
   return knex('batches');
 }
 
+
 /* GET batches for dashboard */
 
 router.get('/', function(req, res, next){
-  res.send(sampleData)
+  // res.send(sampleData);
+  Batches().select().then(function(data){
+    res.send(data)
+  });
 })
 
 router.post('/', function(req, res){

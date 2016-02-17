@@ -1,11 +1,24 @@
 var express = require('express');
 var router = express.Router();
+var knex = require('../db/knex');
+
+function Batches(){
+  return knex('batches');
+}
 
 /* GET batches for dashboard */
 
 router.get('/', function(req, res, next){
   res.send(sampleData)
 })
+
+router.post('/', function(req, res){
+  Batches().insert({
+    user_id: req.body.user_id,
+    beer_id: req.body.styleNumber,
+    name: req.body.name
+  });
+});
 
 var sampleData = [
   {

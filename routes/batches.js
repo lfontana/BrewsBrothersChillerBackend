@@ -12,7 +12,7 @@ function Batches(){
 router.get('/', function(req, res, next){
   // res.send(sampleData);
   Batches().select().then(function(data){
-    res.send(data)
+    res.json(data)
   });
 })
 

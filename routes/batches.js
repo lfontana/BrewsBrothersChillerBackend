@@ -14,17 +14,22 @@ function Batches(){
 /* GET batches for dashboard */
 
 router.get('/', function(req, res, next){
-  Batches().select().where('user_id', rec.decoded.id).then(function(data) {
-    db.MongoClient.connect(process.env.MONGOLAB_URI, function(err, db){
-      var brews = db.collection('brews');
-      brews.find({
-        brew_id:data[0],
-        schedule: req.body.schedule
-      }, function(){
-        res.send(data);
-      })
-    });
-  };
+  // Batches().select().where('user_id', rec.decoded.id).then(function(data) {
+  //   db.MongoClient.connect(process.env.MONGOLAB_URI, function(err, db){
+  //     var brews = db.collection('brews');
+  //     brews.find({
+  //       brew_id:data[0],
+  //       schedule: req.body.schedule
+  //     }, function(){
+  //       res.send(data);
+  //     })
+  //   });
+  // };
+  console.log(req.decoded);
+  res.send("req.decoded");
+  // Batches().select().then(function(data){
+  //   res.send(data);
+  // });
 })
 
 router.post('/', function(req, res, next){

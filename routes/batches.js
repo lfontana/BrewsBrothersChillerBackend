@@ -39,11 +39,6 @@ router.get('/', function(req, res, next){
   }).then(function(batches) {
     res.send(batches);
   })
-  // console.log(req.user);
-  // res.send("req.decoded");
-  // Batches().select().then(function(data){
-  //   res.send(data);
-  // });
 })
 
 router.post('/', function(req, res, next){
@@ -74,7 +69,7 @@ router.delete('/', function(req, res, next){
 
 router.get('/startBrew', function(req, res, next){
   if(req.user.pi_id){
-    
+
   }else{
     res.send('need a pi ip address');
   }

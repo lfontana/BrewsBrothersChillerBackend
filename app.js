@@ -9,6 +9,7 @@ var debug = require('debug')('bb-server:server');
 var http = require('http');
 var cors = require('cors');
 var jwt = require('jsonwebtoken');
+var passport = require('passport')
 
 require('dotenv').load();
 
@@ -32,10 +33,13 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 
 app.use(cors());
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(passport.initialize());
+
+
 
 //Passport fucking bullshit
 
@@ -132,6 +136,12 @@ io.on('connection',function(socket){
   socket.on('logData',function(data){
     console.log(data);
   });
+  socket.on('error', function(err){
+    console.log(err);
+  });
+  socket.on('disconnect', function() {
+  console.log('Disconected');
+})
 })
 /**
  * Normalize a port into a number, string, or false.

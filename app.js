@@ -10,6 +10,8 @@ var http = require('http');
 var cors = require('cors');
 var jwt = require('jsonwebtoken');
 var knex = require('./db/knex');
+var passport = require('passport')
+
 require('dotenv').load();
 
 var routes = require('./routes/index');
@@ -35,10 +37,13 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 
 app.use(cors());
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(passport.initialize());
+
+
 
 //Passport fucking bullshit
 

@@ -8,13 +8,17 @@ var bodyParser = require('body-parser');
 var debug = require('debug')('bb-server:server');
 var http = require('http');
 var cors = require('cors');
+var jwt = require('jsonwebtoken');
 
 require('dotenv').load();
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var batches = require('./routes/batches');
-var brewerydb = require('./routes/brewerydb')
+var brewerydb = require('./routes/brewerydb');
+var auth = require('./routes/auth');
+
+var session = require('express-session');
 
 var app = express();
 
@@ -26,16 +30,40 @@ app.set('view engine', 'jade');
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//Passport fucking bullshit
+
+// app.use(session({
+//   secret:process.env.COOKIE_SECRET,
+//   resave:true,
+//   saveUninitialized:true
+// }));
+//
+// app.use(auth.passport.initialize());
+// app.use(auth.passport.session());
+//
+// auth.passport.serializeUser(function(user, done) {
+//   console.log('serializing user');
+//   done(null, user);
+// });
+//
+// auth.passport.deserializeUser(function(user, done) {
+//   console.log('deserializing user');
+//   console.log(user);
+//   done(null, user);
+// });
+
 app.use('/', routes);
 app.use('/users', users);
-app.use('/dashboard', batches);
+app.use('/dashboard', tokenAuthenicated,  batches);
 app.use('/styles', brewerydb);
+app.use('/auth', auth.router)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -171,5 +199,35 @@ function onListening() {
   debug('Listening on ' + bind);
 }
 
+function tokenAuthenicated(req, res, next){
+ console.log(req.headers);
+ // check header or url parameters or post parameters for token
+ var token = req.body.token || req.query.token || req.headers.token;
+
+ // decode token
+ if (token) {
+   console.log(process.env.JWT_SECRET);
+ // verifies secret and checks exp
+   jwt.verify(token, process.env.JWT_SECRET, function(err, decoded) {
+     if (err) {
+       return res.json({ success: false, message: 'Failed to authenticate token.' });
+     } else {
+       console.log('token is good');
+       // if everything is good, save to request for use in other routes
+       req.decoded = decoded;
+       next();
+     }
+   });
+  } else {
+    console.log('no token')
+   // if there is no token
+ // return an error
+ return res.status(403).send({
+     success: false,
+     message: 'No token provided.'
+ });
+ }
+
+}
 
 module.exports = app;

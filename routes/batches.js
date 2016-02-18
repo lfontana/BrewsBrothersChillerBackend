@@ -20,34 +20,25 @@ function Users(){
 
 
 router.get('/', function(req, res, next){
-  var returnArray = [];
   Batches().where('user_id', req.user.id).select().then(function(batches) {
     return promise.map(batches, function(batch) {
       var batchId = batch.id;
-      db.MongoClient.connect(process.env.MONGOLAB_URI, function(err, db){
+      return new Promise(function(res, rej){
+        db.MongoClient.connect(process.env.MONGOLAB_URI, function(err, db){
         var brews = db.collection('brews');
         // console.log(batch);
-         return brews.find({
+         brews.find({
           brew_id:batchId
         }).limit(1).next(function(err, data){
           batch.schedule = data.schedule;
-
-          returnArray.push(batch);
-          return batch
+          res(batch)
+          })
         })
       });
-    }).then(function(data){
-      console.log('from map ', data)
     })
   }).then(function(batches) {
-    console.log('from outside', batches)
-    res.send(returnArray);
+    res.send(batches);
   })
-  // console.log(req.user);
-  // res.send("req.decoded");
-  // Batches().select().then(function(data){
-  //   res.send(data);
-  // });
 })
 
 router.post('/', function(req, res, next){
@@ -76,4 +67,12 @@ router.delete('/', function(req, res, next){
   })
 })
 
+router.get('/startBrew', function(req, res, next){
+  if(req.user.pi_id){
+
+  }else{
+    res.send('need a pi ip address');
+  }
+
+})
 module.exports = router;

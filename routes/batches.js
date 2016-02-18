@@ -1,31 +1,79 @@
+require('dotenv').load();
+
 var express = require('express');
 var router = express.Router();
 var knex = require('../db/knex');
+var db = require('mongodb');
+var promise = require('bluebird')
 
 function Batches(){
   return knex('batches');
 }
 
+function Users(){
+  return knex('users');
+}
+
 
 /* GET batches for dashboard */
 
+
+
 router.get('/', function(req, res, next){
-  console.log(req.decoded);
-  res.send("req.decoded");
+  var returnArray = [];
+  Batches().where('user_id', req.user.id).select().then(function(batches) {
+    return promise.map(batches, function(batch) {
+      var batchId = batch.id;
+      db.MongoClient.connect(process.env.MONGOLAB_URI, function(err, db){
+        var brews = db.collection('brews');
+        // console.log(batch);
+         return brews.find({
+          brew_id:batchId
+        }).limit(1).next(function(err, data){
+          batch.schedule = data.schedule;
+
+          returnArray.push(batch);
+          return batch
+        })
+      });
+    }).then(function(data){
+      console.log('from map ', data)
+    })
+  }).then(function(batches) {
+    console.log('from outside', batches)
+    res.send(returnArray);
+  })
+  // console.log(req.user);
+  // res.send("req.decoded");
   // Batches().select().then(function(data){
   //   res.send(data);
   // });
 })
 
 router.post('/', function(req, res, next){
-  console.log("req body", req.body);
   Batches().insert({
     user_id: req.body.user_id,
     beer_id: req.body.styleNumber,
     name: req.body.name
   }, 'id').then(function(data){
-    res.end();
+    console.log(data);
+    db.MongoClient.connect(process.env.MONGOLAB_URI, function(err, db){
+      var brews = db.collection('brews');
+      brews.insert({
+        brew_id:data[0],
+        schedule: req.body.schedule
+      }, function(){
+        res.send("success");
+      })
+    });
   });
 });
+
+router.delete('/', function(req, res, next){
+  Batches().where('id', req.body.id).del()
+  .then(function(){
+    res.end();
+  })
+})
 
 module.exports = router;

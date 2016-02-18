@@ -19,13 +19,14 @@ exports.seed = function(knex, Promise) {
     knex('beers').insert({style: 'Stout'}),
     knex('beers').insert({style: 'Lager'}),
   ]);
-}).then(function(){
-  return Promise.all([
-    knex('batches').insert({
-      user_id: 1,
-      beer_id: 1,
-      name: 'first brew',
-    })
-  ]);
 })
+// .then(function(){
+//   return Promise.all([
+//     knex('batches').insert({
+//       user_id: 1,
+//       beer_id: 1,
+//       name: 'first brew',
+//     })
+//   ]);
+// })
 };

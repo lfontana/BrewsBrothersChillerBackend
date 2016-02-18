@@ -51,7 +51,7 @@ passport.use(new GoogleStrategy(
           expiresIn:15778463
         })
         // res.setHeader('x-token',token);
-        var authUrl = 'http://localhost:8080/#/authenticate/'+token;
+        var authUrl = 'https://brewsbrotherschillerfrontend.firebaseapp.com/#/authenticate/'+token;
         res.redirect(authUrl);
       } else if (info) {
         next(info);

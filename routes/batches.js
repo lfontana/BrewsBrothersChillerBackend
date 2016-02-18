@@ -47,7 +47,6 @@ router.post('/', function(req, res, next){
     beer_id: req.body.styleNumber,
     name: req.body.name
   }, 'id').then(function(data){
-    console.log(data);
     db.MongoClient.connect(process.env.MONGOLAB_URI, function(err, db){
       var brews = db.collection('brews');
       brews.insert({

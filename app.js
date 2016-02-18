@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var debug = require('debug')('bb-server:server');
 var http = require('http');
 var cors = require('cors');
+var jwt = require('jsonwebtoken');
 
 require('dotenv').load();
 
@@ -60,7 +61,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
-app.use('/dashboard', batches);
+app.use('/dashboard', tokenAuthenicated,  batches);
 app.use('/styles', brewerydb);
 app.use('/auth', auth.router)
 
@@ -192,5 +193,35 @@ function onListening() {
   debug('Listening on ' + bind);
 }
 
+function tokenAuthenicated(req, res, next){
+ console.log(req.headers);
+ // check header or url parameters or post parameters for token
+ var token = req.body.token || req.query.token || req.headers.token;
+
+ // decode token
+ if (token) {
+   console.log(process.env.JWT_SECRET);
+ // verifies secret and checks exp
+   jwt.verify(token, process.env.JWT_SECRET, function(err, decoded) {
+     if (err) {
+       return res.json({ success: false, message: 'Failed to authenticate token.' });
+     } else {
+       console.log('token is good');
+       // if everything is good, save to request for use in other routes
+       req.decoded = decoded;
+       next();
+     }
+   });
+  } else {
+    console.log('no token')
+   // if there is no token
+ // return an error
+ return res.status(403).send({
+     success: false,
+     message: 'No token provided.'
+ });
+ }
+
+}
 
 module.exports = app;

@@ -104,6 +104,12 @@ io.on('connection',function(socket){
   socket.on('logData',function(data){
     console.log(data);
   });
+  socket.on('error', function(err){
+    console.log(err);
+  });
+  socket.on('disconnect', function() {
+  console.log('Disconected');
+})
 })
 /**
  * Normalize a port into a number, string, or false.

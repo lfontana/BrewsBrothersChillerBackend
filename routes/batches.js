@@ -31,14 +31,12 @@ router.get('/', function(req, res, next){
           brew_id:batchId
         }).limit(1).next(function(err, data){
           batch.schedule = data.schedule;
-          console.log(batch);
           res(batch)
           })
         })
       });
     })
   }).then(function(batches) {
-    console.log('from outside', batches)
     res.send(batches);
   })
   // console.log(req.user);
@@ -74,4 +72,12 @@ router.delete('/', function(req, res, next){
   })
 })
 
+router.get('/startBrew', function(req, res, next){
+  if(req.user.pi_id){
+    
+  }else{
+    res.send('need a pi ip address');
+  }
+
+})
 module.exports = router;

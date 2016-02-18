@@ -1,18 +1,24 @@
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
-var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+var GoogleStrategy = require('passport-google-oauth2').Strategy;
 var knex = require('../db/knex');
 var jwt = require('jsonwebtoken');
 
 var env = {
   clientID: process.env.CLIENT_ID,
   clientSecret: process.env.CLIENT_SECRET,
-  callbackURL: process.env.CALLBACK_URL
+  callbackURL: process.env.CALLBACK_URL,
+  passReqToCallback: true
 }
 
 passport.use(new GoogleStrategy(
-  env,
+  {
+    clientID: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
+    callbackURL: process.env.CALLBACK_URL,
+    passReqToCallback: true
+  },
   function(token, tokenSecret, profile, done) {
     var user = profile.emails[0].value;
     console.log(profile.emails[0].value);

@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 var express = require('express');
+var errorHandler = require('errorhandler');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -70,10 +71,11 @@ app.use(passport.initialize());
 
 /* Dev Environment for Mongo */
 
-if ('development' == app.get('env')) {
-  app.use(express.errorHandler());
-  mongoose.connect('')
-}
+/* Removed due to not using it */
+// if ('development' == app.get('env')) {
+//   app.use(errorHandler());
+//   mongoose.connect('')
+// }
 
 app.use('/', routes);
 app.use('/users', users);

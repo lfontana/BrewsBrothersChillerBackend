@@ -9,6 +9,7 @@ var debug = require('debug')('bb-server:server');
 var http = require('http');
 var cors = require('cors');
 var jwt = require('jsonwebtoken');
+var knex = require('./db/knex');
 var passport = require('passport')
 
 require('dotenv').load();
@@ -23,6 +24,9 @@ var session = require('express-session');
 
 var app = express();
 
+function Users() {
+  return knex('users');
+}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -65,7 +69,7 @@ app.use(passport.initialize());
 
 app.use('/', routes);
 app.use('/users', users);
-app.use('/dashboard', tokenAuthenicated,  batches);
+app.use('/dashboard', getUser, batches);
 app.use('/styles', brewerydb);
 app.use('/auth', auth.router)
 
@@ -204,26 +208,22 @@ function onListening() {
 }
 
 function tokenAuthenicated(req, res, next){
- console.log(req.headers);
  // check header or url parameters or post parameters for token
  var token = req.body.token || req.query.token || req.headers.token;
 
  // decode token
  if (token) {
-   console.log(process.env.JWT_SECRET);
  // verifies secret and checks exp
    jwt.verify(token, process.env.JWT_SECRET, function(err, decoded) {
      if (err) {
        return res.json({ success: false, message: 'Failed to authenticate token.' });
      } else {
-       console.log('token is good');
        // if everything is good, save to request for use in other routes
        req.decoded = decoded;
        next();
      }
    });
   } else {
-    console.log('no token')
    // if there is no token
  // return an error
  return res.status(403).send({
@@ -232,6 +232,20 @@ function tokenAuthenicated(req, res, next){
  });
  }
 
+}
+
+function getUser(req, res, next) {
+  var email = "sample@gmail.com"
+  Users().where('email', email).select().first().then(function(user) {
+    if (!user) {
+      res.send('Can not find user');
+    } else {
+      req.user = user;
+    }
+    next();
+  }).catch(function(error) {
+    throw error;
+  })
 }
 
 module.exports = app;

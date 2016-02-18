@@ -12,6 +12,9 @@ var env = {
   passReqToCallback: true
 }
 
+function Users() {
+  return knex('users');
+}
 passport.use(new GoogleStrategy(
   {
     clientID: process.env.CLIENT_ID,
@@ -21,7 +24,6 @@ passport.use(new GoogleStrategy(
   },
   function(token, tokenSecret, profile, done) {
     var user = profile.emails[0].value;
-    console.log(profile.emails[0].value);
 
     // knex('users').select().where('oauthid', user.oauthid).first()
     //   .then(function(person) {
@@ -49,16 +51,29 @@ passport.use(new GoogleStrategy(
 
   router.get('/google/callback', function(req, res, next) {
     passport.authenticate('google', function(err, user, info) {
-      console.log('made it here 2')
       if (err) {
         next(err);
       } else if (user) {
-        var token = jwt.sign(user, process.env.JWT_SECRET, {
-          expiresIn:15778463
+        console.log(user);
+        Users().where('email', user).select().first().then(function(hasUser) {
+          console.log(user);
+          if (!hasUser) {
+            console.log("no user");
+            Users().insert({
+              pi_id: null,
+              email: user
+            }).then(function() {
+              setToken(user, res);
+            })
+          } else {
+            setToken(user, res);
+          }
         })
+
         // res.setHeader('x-token',token);
         var authUrl = 'https://brewsbrotherschillerfrontend.firebaseapp.com/#/authenticate/'+token;
         res.redirect(authUrl);
+
       } else if (info) {
         next(info);
       }
@@ -73,7 +88,6 @@ passport.use(new GoogleStrategy(
       // The request will be redirected to Facebook for authentication, so this
       // function will not be called.
 
-      console.log(req.user)
       res.end('success')
     });
 
@@ -82,6 +96,14 @@ passport.use(new GoogleStrategy(
       res.send('logged out')
     })
 
+function setToken(user, res) {
+  var token = jwt.sign(user, process.env.JWT_SECRET, {
+    expiresIn:15778463
+  })
+  // res.setHeader('x-token',token);
+  var authUrl = 'http://localhost:8080/#/authenticate/'+token;
+  res.redirect(authUrl);
+}
 
 module.exports = {
   router: router,

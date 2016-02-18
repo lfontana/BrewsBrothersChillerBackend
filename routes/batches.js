@@ -1,10 +1,11 @@
 require('dotenv').load();
-
 var express = require('express');
 var router = express.Router();
 var knex = require('../db/knex');
 var db = require('mongodb');
-var promise = require('bluebird')
+var promise = require('bluebird');
+var request = require('request');
+var bcrypt =
 
 function Batches(){
   return knex('batches');
@@ -47,7 +48,6 @@ router.post('/', function(req, res, next){
     beer_id: req.body.styleNumber,
     name: req.body.name
   }, 'id').then(function(data){
-    console.log(data);
     db.MongoClient.connect(process.env.MONGOLAB_URI, function(err, db){
       var brews = db.collection('brews');
       brews.insert({
@@ -69,7 +69,9 @@ router.delete('/', function(req, res, next){
 
 router.get('/startBrew', function(req, res, next){
   if(req.user.pi_id){
-
+    var salt = bcrypt.genSaltSync(5);
+    var hash = bcrypt.hashSync(process.env.SERVER_SECRET, salt);
+    request.post('http://'+req.user.pi_id+'/startycle', {password: hash, sechdule: req.body.sechdule});
   }else{
     res.send('need a pi ip address');
   }

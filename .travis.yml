@@ -1,16 +1,15 @@
 language: node_js
 node_js:
-  - "4.1"
-
-# scripts:
-#   test: mocha
-#
-# env:
-#   global:
-#     secure:
-#
-# deploy:
-#   app:
-#   provider: heroku
-#   api_key:
-#     secure: 166f0b6348fdccde864dc9aecb3d50bb
+- '4.1'
+services:
+- mongodb
+scripts:
+  start: node app.js
+  test: mocha
+deploy:
+  provider: heroku
+  api_key:
+    secure: PvGpBbq/UQEQkRBUibZ2lpggT3fYgYK4lFB7mJebo/wTVx9o4m5x68CznjpFds57KttrhFRqKAThM+ghlGwirVu0onRqc5sXZL/tGLLkvxpguIMtuJlxfHP2G3+jNJ1e6SZtlIEKIlfedxkXC7oM2OwMw5/7C4Vbj9g741kJSVmEhMSjVcbOTX7YIdQF/+qutOIdgDjKJsKj6hyac6GGcsuboQ475MEGyUXhVdRD0waLtZvV+JDOf+7gkJIcE5mrAS67Tu+qwiq3ysJFNxTx7vxG4DAMkrnFjzS0am+rcl8Znal5k7hviXpvOasbif0lnjQFz4IjnguZ+CD/Fx2MIQ7bshOubRu+XPnFiG4l2VhcEhKzSYC7JjiHDBZgQK4O7x2+JDpZvV+chvM9jADr5wPbmblVpXD+ylaZzTf6nszI2CmgDWEsUmpeQI8qngftOCX8dffjEUprvAuG1ibl5B5KeksLUat//beJ5lAWWhZvvh1vS/pNysNACweu5vY2Z5QGp5URSenj+ZJ4Xk69son7RnYCb23Sv+B2wiZfWFWVYv2EIgslqKCMstmzwOvYRK8dXfHEdyM+uJEDDj1hk6SG3XvZySRYuWrXuoZHJXrjIrJuIfT94p6km8kdCx3d0p/ytoEV8lTpvH3Xdc0j6mLiaRiH15H0B+c2C7rv4uw=
+  app: chillerdb
+  on:
+    repo: brews-brothers/BrewsBrothersChillerBackend

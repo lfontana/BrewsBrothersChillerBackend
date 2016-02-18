@@ -9,6 +9,7 @@
     "start": "node app.js"
   },
   "dependencies": {
+    "bluebird": "^3.3.1",
     "body-parser": "~1.13.2",
     "bson": "^0.4.21",
     "chai": "*",

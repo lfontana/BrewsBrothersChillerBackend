@@ -6,43 +6,24 @@ function Batches(){
   return knex('batches');
 }
 
+
 /* GET batches for dashboard */
 
 router.get('/', function(req, res, next){
-  res.send(sampleData)
+  Batches().select().then(function(data){
+    res.send(data);
+  });
 })
 
-router.post('/', function(req, res){
+router.post('/', function(req, res, next){
+  console.log("req body", req.body);
   Batches().insert({
     user_id: req.body.user_id,
     beer_id: req.body.styleNumber,
     name: req.body.name
+  }, 'id').then(function(data){
+    res.end();
   });
 });
-
-var sampleData = [
-  {
-    name: "Pale Ale - Default",
-    style: "pale ale",
-    created: 1454673600,
-    lastRun: 1454846400,
-    favorite: false,
-    schedule: [
-      {
-        time: 0,
-        temp: 68
-      },
-      {
-        time: 86400,
-        temp: 65
-      },
-      {
-        time: 604800,
-        temp: 50
-      }
-    ]
-  }
-
-]
 
 module.exports = router;

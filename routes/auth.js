@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
-var GoogleStrategy = require('passport-google-oauth2').Strategy;
+var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var knex = require('../db/knex');
 var jwt = require('jsonwebtoken');
 
@@ -19,8 +19,8 @@ passport.use(new GoogleStrategy(
   {
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
-    callbackURL: process.env.CALLBACK_URL,
-    passReqToCallback: true
+    callbackURL: process.env.CALLBACK_URL
+    // passReqToCallback: true
   },
   function(token, tokenSecret, profile, done) {
     var user = profile.emails[0].value;
@@ -44,8 +44,7 @@ passport.use(new GoogleStrategy(
         // }
       // })
       console.log(token+' = token');
-      // console.log(profile);
-        done(null, user);
+      done(null, user);
   }
 ));
 
@@ -54,23 +53,26 @@ passport.use(new GoogleStrategy(
       if (err) {
         next(err);
       } else if (user) {
-        console.log(user);
-        Users().where('email', user).select().first().then(function(hasUser) {
-          console.log(user);
-          if (!hasUser) {
-            console.log("no user");
-            Users().insert({
-              pi_id: null,
-              email: user
-            }).then(function() {
-              setToken(user, res);
-            })
-          } else {
-            setToken(user, res);
-          }
-        })
+        console.log('User = '+user);
+        // Users().where('email', user).select().first().then(function(hasUser) {
+        //   console.log(user);
+        //   if (!hasUser) {
+        //     console.log("no user");
+        //     Users().insert({
+        //       pi_id: null,
+        //       email: user
+        //     }).then(function() {
+        //       setToken(user, res);
+        //     })
+        //   } else {
+        //     setToken(user, res);
+        //   }
+        // })
 
         // res.setHeader('x-token',token);
+        var token = jwt.sign(user, process.env.JWT_SECRET, {
+        expiresIn:15778463
+      });
         var authUrl = 'https://brewsbrotherschillerfrontend.firebaseapp.com/#/authenticate/'+token;
         res.redirect(authUrl);
 
@@ -102,7 +104,7 @@ function setToken(user, res) {
   })
   // res.setHeader('x-token',token);
   var authUrl = 'http://localhost:8080/#/authenticate/'+token;
-  res.redirect(authUrl);
+
 }
 
 module.exports = {
